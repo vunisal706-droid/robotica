@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+  
+  <!-- Robot body -->
+  <rect x="156" y="200" width="200" height="220" rx="30" fill="#ffffff"/>
+  
+  <!-- Robot head -->
+  <rect x="176" y="100" width="160" height="120" rx="25" fill="#ffffff"/>
+  
+  <!-- Eyes -->
+  <circle cx="216" cy="155" r="22" fill="#667eea"/>
+  <circle cx="296" cy="155" r="22" fill="#667eea"/>
+  <circle cx="220" cy="150" r="8" fill="#ffffff"/>
+  <circle cx="300" cy="150" r="8" fill="#ffffff"/>
+  
+  <!-- Smile -->
+  <path d="M 226 185 Q 256 210 286 185" stroke="#667eea" stroke-width="8" fill="none" stroke-linecap="round"/>
+  
+  <!-- Antenna -->
+  <line x1="256" y1="100" x2="256" y2="60" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="256" cy="50" r="15" fill="#f59e0b"/>
+  
+  <!-- Arms -->
+  <rect x="106" y="230" width="50" height="25" rx="12" fill="#ffffff"/>
+  <rect x="356" y="230" width="50" height="25" rx="12" fill="#ffffff"/>
+  
+  <!-- Chest screen -->
+  <rect x="196" y="250" width="120" height="80" rx="10" fill="#667eea"/>
+  <rect x="206" y="260" width="100" height="60" rx="5" fill="#1e293b"/>
+  
+  <!-- Screen content - code lines -->
+  <rect x="216" y="275" width="50" height="6" rx="3" fill="#10b981"/>
+  <rect x="216" y="290" width="70" height="6" rx="3" fill="#f59e0b"/>
+  <rect x="216" y="305" width="40" height="6" rx="3" fill="#6366f1"/>
+  
+  <!-- Legs -->
+  <rect x="186" y="420" width="40" height="50" rx="10" fill="#ffffff"/>
+  <rect x="286" y="420" width="40" height="50" rx="10" fill="#ffffff"/>
+</svg>

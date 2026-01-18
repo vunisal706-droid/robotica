@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="description" content="CapiRobots - Suite de robótica educativa para primaria">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>CapiRobots - Robótica Educativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text: #1e293b;
+            --text-light: #64748b;
+            --shadow: 0 10px 40px rgba(0,0,0,0.15);
+            --radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .home-screen {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+        }
+
+        .module-card.beebot::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+        .module-card.lego::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+        .module-card.tapetes::before { background: linear-gradient(90deg, #10b981, #059669); }
+        .module-card.circuitos::before { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+        .module-card.microbit::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+        .module-card.capiled::before { background: linear-gradient(90deg, #ec4899, #db2777); }
+
+        .module-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .module-card:active {
+            transform: scale(0.98);
+        }
+
+        .module-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+        }
+
+        .beebot .module-icon { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .lego .module-icon { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+        .tapetes .module-icon { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .circuitos .module-icon { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+        .microbit .module-icon { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+        .capiled .module-icon { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+
+        .module-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .module-desc {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-header {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .back-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.1);
+        }
+
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        /* Grid layouts */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+
+        .two-column-reverse {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .two-column, .two-column-reverse {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        /* BeeBot */
+        .beebot-grid {
+            display: grid;
+            gap: 3px;
+            background: #e2e8f0;
+            border-radius: 15px;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .grid-cell:hover { background: #f0fdf4; }
+        .grid-cell.obstacle { background: #fecaca; }
+        .grid-cell.target { background: #bbf7d0; }
+
+        .beebot-robot {
+            font-size: 2rem;
+            transition: all 0.5s ease;
+        }
+
+        .direction-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 55px);
+            grid-template-rows: repeat(3, 55px);
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .dir-btn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .dir-btn:hover { transform: scale(1.1); }
+        .dir-btn:active { transform: scale(0.95); }
+        .dir-btn.empty { background: transparent; box-shadow: none; cursor: default; }
+
+        .program-display {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .program-step {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 70px;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn.play { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .action-btn.clear { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .action-btn.secondary { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .size-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .size-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .size-btn:hover { background: #cbd5e1; }
+
+        /* LEGO */
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .project-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .project-item:hover { background: #f1f5f9; }
+        .project-item.active { border-color: #ef4444; background: #fef2f2; }
+        .project-item h4 { margin-bottom: 4px; }
+        .project-item p { font-size: 0.85rem; color: var(--text-light); }
+
+        .level {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .level.facil { background: #d1fae5; color: #059669; }
+        .level.medio { background: #fef3c7; color: #d97706; }
+        .level.avanzado { background: #fee2e2; color: #dc2626; }
+
+        .tab-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background: #f1f5f9;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .list-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .list-item.completed { background: #d1fae5; }
+        .list-item.completed .list-icon { background: linear-gradient(135deg, #10b981, #059669); }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+        }
+
+        /* Tapetes */
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .theme-btn {
+            padding: 10px;
+            border: 3px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+
+        .theme-btn:hover { border-color: #10b981; }
+        .theme-btn.active { border-color: #10b981; background: #d1fae5; }
+
+        .tapete-grid {
+            display: grid;
+            gap: 2px;
+            background: #1e293b;
+            padding: 8px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .tapete-cell {
+            aspect-ratio: 1;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .tapete-cell:hover { background: #f0fdf4; }
+
+        .palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .palette-item {
+            width: 40px;
+            height: 40px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .palette-item:hover { border-color: #10b981; }
+        .palette-item.active { border-color: #10b981; background: #d1fae5; }
+
+        /* Circuitos */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .component-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .component-btn:hover { border-color: #3b82f6; background: #eff6ff; }
+        .component-btn.active { border-color: #3b82f6; background: #dbeafe; }
+        .component-btn .icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
+        .component-btn .name { font-size: 0.8rem; color: var(--text-light); }
+
+        .circuit-board {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .circuit-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+        }
+
+        .circuit-cell {
+            aspect-ratio: 1;
+            background: #334155;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .circuit-cell:hover { background: #475569; }
+        .circuit-cell.wire { background: #fbbf24; }
+        .circuit-cell.has-component { background: #1e40af; }
+        .circuit-cell.powered { animation: glow 1s infinite alternate; }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #fbbf24; }
+            to { box-shadow: 0 0 20px #fbbf24; }
+        }
+
+        .status-box {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .status-indicator.on {
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        /* Microbit */
+        .microbit-device {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 20px;
+            padding: 25px;
+            display: inline-block;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .led-matrix {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .led {
+            width: 28px;
+            height: 28px;
+            background: #1e293b;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .led.on {
+            background: #ef4444;
+            box-shadow: 0 0 15px #ef4444;
+        }
+
+        .mb-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .mb-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #475569, #64748b);
+            border: none;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .mb-btn:hover { transform: scale(1.1); }
+        .mb-btn:active { transform: scale(0.95); }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .pattern-btn {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .pattern-btn:hover { border-color: #8b5cf6; background: #f5f3ff; }
+        .pattern-btn .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+
+        .sensor-panel {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .sensor-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .sensor-item:last-child { border-bottom: none; }
+
+        .sensor-value {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 50px;
+        }
+
+        .sensor-slider {
+            width: 80px;
+            accent-color: #8b5cf6;
+        }
+
+        /* LED Strip */
+        .led-strip {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 150px;
+            align-items: center;
+        }
+
+        .led-pixel {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #334155;
+            cursor: pointer;
+            border: 3px solid #475569;
+        }
+
+        .led-pixel.active {
+            box-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+        }
+
+        .color-presets {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .color-preset {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .color-preset:hover { transform: scale(1.1); }
+        .color-preset.active { border-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+
+        .effect-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .effect-btn {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .effect-btn:hover { border-color: #ec4899; background: #fdf2f8; }
+        .effect-btn.active { border-color: #ec4899; background: #fce7f3; }
+        .effect-btn .icon { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+
+        .speed-control input[type="range"] {
+            width: 100%;
+            accent-color: #ec4899;
+        }
+
+        /* Helper */
+        .capitulin {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        .capitulin:hover { transform: scale(1.1) rotate(10deg); }
+
+        .capitulin-tip {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            max-width: 260px;
+            font-size: 0.9rem;
+            z-index: 50;
+            display: none;
+        }
+
+        .capitulin-tip.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .capitulin-tip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 25px;
+            border: 8px solid transparent;
+            border-top-color: white;
+            border-bottom: none;
+        }
+
+        .config-group {
+            margin-bottom: 20px;
+        }
+
+        .config-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .config-group input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .config-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            .tapete-grid, .tapete-grid * { visibility: visible; }
+            .tapete-grid { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="showScreen('home')">
+            <div class="logo-icon">🤖</div>
+            <span class="logo-text">CapiRobots</span>
+        </div>
+        <button class="nav-btn" onclick="showScreen('home')">🏠 Inicio</button>
+    </header>
+
+    <main class="container">
+        <!-- Home -->
+        <section id="home" class="screen active">
+            <div class="home-screen">
+                <div class="module-card beebot" onclick="showScreen('beebot')">
+                    <div class="module-icon">🐝</div>
+                    <h2 class="module-title">CapiBeeBot</h2>
+                    <p class="module-desc">Simulador de Bee-Bot para practicar programación</p>
+                </div>
+                <div class="module-card lego" onclick="showScreen('lego')">
+                    <div class="module-icon">🧱</div>
+                    <h2 class="module-title">CapiLego</h2>
+                    <p class="module-desc">Proyectos LEGO Education con instrucciones</p>
+                </div>
+                <div class="module-card tapetes" onclick="showScreen('tapetes')">
+                    <div class="module-icon">🗺️</div>
+                    <h2 class="module-title">CapiTapetes</h2>
+                    <p class="module-desc">Generador de tapetes para robots de suelo</p>
+                </div>
+                <div class="module-card circuitos" onclick="showScreen('circuitos')">
+                    <div class="module-icon">⚡</div>
+                    <h2 class="module-title">CapiCircuitos</h2>
+                    <p class="module-desc">Simulador de circuitos eléctricos básicos</p>
+                </div>
+                <div class="module-card microbit" onclick="showScreen('microbit')">
+                    <div class="module-icon">📟</div>
+                    <h2 class="module-title">CapiMicro:bit</h2>
+                    <p class="module-desc">Simulador micro:bit con LEDs y sensores</p>
+                </div>
+                <div class="module-card capiled" onclick="showScreen('led')">
+                    <div class="module-icon">💡</div>
+                    <h2 class="module-title">CapiLED</h2>
+                    <p class="module-desc">Diseñador de patrones para tiras NeoPixel</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BeeBot -->
+        <section id="beebot" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="showScreen('home')">←</button>
+                <h1 class="app-title">🐝 CapiBeeBot</h1>
+            </div>
+            <div class="two-column">
+                <div class="card">
+                    <div id="beebotGrid" class="beebot-grid"></div>
+                    <div class="size-control">
+                        <button class="size-btn" onclick="changeGridSize(-1)">−</button>
+                        <span id="sizeDisplay">6×6</span>
+                        <button class="size-btn" onclick="changeGridSize(1)">+</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">🎮 Controles</h3>
+                    <div class="direction-pad">
+                        <div class="dir-btn empty"></div>
+                        <button class="dir-btn" onclick="addCommand('up')">⬆️</button>
+                        <div class="dir-btn empty"></div>
+                        <button class="dir-btn" onclick="addCommand('left')">⬅️</button>
+                        <button class="dir-btn" onclick="addCommand('pause')">⏸️</button>
+                        <button class="dir-btn" onclick="addCommand('right')">➡️</button>
+                        <div class="dir-btn empty"></div>
+                        <button class="dir-btn" onclick="addCommand('down')">⬇️</button>
+                        <div class="dir-btn empty"></div>
+                    </div>
+                    <h3 class="section-title" style="margin-top:20px">📝 Programa</h3>
+                    <div class="program-display" id="programDisplay"></div>
+                    <div class="btn-row" style="margin-top:15px">
+                        <button class="action-btn play" onclick="runProgram()">▶️ Ejecutar</button>
+                        <button class="action-btn secondary" onclick="undoCommand()">↩️</button>
+                        <button class="action-btn clear" onclick="clearProgram()">🗑️</button>
+                    </div>
+                    <p style="margin-top:15px; font-size:0.85rem; color:var(--text-light)">Clic en celda: 🚧 obstáculo → 🎯 meta → vacío</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEGO -->
+        <section id="lego" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="showScreen('home')">←</button>
+                <h1 class="app-title">🧱 CapiLego</h1>
+            </div>
+            <div class="two-column-reverse">
+                <div class="card">
+                    <h3 class="section-title">📁 Proyectos</h3>
+                    <div class="project-list" id="projectList"></div>
+                </div>
+                <div class="card">
+                    <h2 id="projectTitle" style="margin-bottom:15px">Selecciona un proyecto</h2>
+                    <div class="tab-row">
+                        <button class="tab-btn active" onclick="showTab('materials')">📦 Materiales</button>
+                        <button class="tab-btn" onclick="showTab('steps')">📋 Pasos</button>
+                        <button class="tab-btn" onclick="showTab('code')">💻 Código</button>
+                    </div>
+                    <div id="materialsTab" class="tab-content active"><div id="materialsList"></div></div>
+                    <div id="stepsTab" class="tab-content"><div id="stepsList"></div></div>
+                    <div id="codeTab" class="tab-content"><div id="codeContent" class="code-block"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tapetes -->
+        <section id="tapetes" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="showScreen('home')">←</button>
+                <h1 class="app-title">🗺️ CapiTapetes</h1>
+            </div>
+            <div class="two-column-reverse">
+                <div class="card">
+                    <div class="config-group">
+                        <label>📐 Tamaño</label>
+                        <div style="display:flex;gap:8px">
+                            <input type="number" id="tapeteRows" value="6" min="3" max="10" onchange="generateTapete()">
+                            <span style="align-self:center">×</span>
+                            <input type="number" id="tapeteCols" value="6" min="3" max="10" onchange="generateTapete()">
+                        </div>
+                    </div>
+                    <div class="config-group">
+                        <label>🎨 Tema</label>
+                        <div class="theme-grid">
+                            <button class="theme-btn active" data-theme="numeros" onclick="selectTheme(this)">🔢</button>
+                            <button class="theme-btn" data-theme="letras" onclick="selectTheme(this)">🔤</button>
+                            <button class="theme-btn" data-theme="animales" onclick="selectTheme(this)">🐾</button>
+                            <button class="theme-btn" data-theme="frutas" onclick="selectTheme(this)">🍎</button>
+                            <button class="theme-btn" data-theme="formas" onclick="selectTheme(this)">⭐</button>
+                            <button class="theme-btn" data-theme="vacio" onclick="selectTheme(this)">⬜</button>
+                        </div>
+                    </div>
+                    <label>✏️ Elemento</label>
+                    <div class="palette" id="elementPalette"></div>
+                    <div class="btn-row" style="margin-top:20px">
+                        <button class="action-btn play" onclick="printTapete()">🖨️ Imprimir</button>
+                        <button class="action-btn secondary" onclick="saveTapete()">💾 Guardar</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">👁️ Vista previa</h3>
+                    <div id="tapeteGrid" class="tapete-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Circuitos -->
+        <section id="circuitos" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="showScreen('home')">←</button>
+                <h1 class="app-title">⚡ CapiCircuitos</h1>
+            </div>
+            <div class="two-column-reverse">
+                <div class="card">
+                    <h3 class="section-title">🔧 Componentes</h3>
+                    <div class="component-grid">
+                        <div class="component-btn active" onclick="selectComponent(this,'wire')"><span class="icon">〰️</span><span class="name">Cable</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'battery')"><span class="icon">🔋</span><span class="name">Pila</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'led')"><span class="icon">💡</span><span class="name">LED</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'switch')"><span class="icon">🔘</span><span class="name">Interruptor</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'resistor')"><span class="icon">⚡</span><span class="name">Resistencia</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'motor')"><span class="icon">⚙️</span><span class="name">Motor</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'buzzer')"><span class="icon">🔔</span><span class="name">Zumbador</span></div>
+                        <div class="component-btn" onclick="selectComponent(this,'eraser')"><span class="icon">🗑️</span><span class="name">Borrar</span></div>
+                    </div>
+                    <div class="status-box">
+                        <h4 style="margin-bottom:8px">📊 Estado</h4>
+                        <div class="status-row">
+                            <div class="status-indicator" id="circuitStatus"></div>
+                            <span id="circuitMessage">Sin circuito</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">🔌 Área de trabajo</h3>
+                    <div class="circuit-board">
+                        <div class="circuit-grid" id="circuitGrid"></div>
+                    </div>
+                    <div class="btn-row" style="margin-top:15px">
+                        <button class="action-btn play" onclick="testCircuit()">⚡ Probar</button>
+                        <button class="action-btn clear" onclick="clearCircuit()">🗑️ Limpiar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Microbit -->
+        <section id="microbit" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="showScreen('home')">←</button>
+                <h1 class="app-title">📟 CapiMicro:bit</h1>
+            </div>
+            <div class="two-column">
+                <div class="card" style="text-align:center">
+                    <h3 class="section-title">Simulador</h3>
+                    <div class="microbit-device">
+                        <div class="led-matrix" id="microbitMatrix"></div>
+                        <div class="mb-buttons">
+                            <button class="mb-btn" onmousedown="mbPress('A')" onmouseup="mbRelease()">A</button>
+                            <button class="mb-btn" onmousedown="mbPress('B')" onmouseup="mbRelease()">B</button>
+                        </div>
+                    </div>
+                    <p style="margin-top:15px;font-size:0.85rem;color:var(--text-light)">Clic en LEDs o usa patrones</p>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">🎨 Patrones</h3>
+                    <div class="pattern-grid">
+                        <button class="pattern-btn" onclick="showPattern('heart')"><span class="icon">❤️</span>Corazón</button>
+                        <button class="pattern-btn" onclick="showPattern('smile')"><span class="icon">😊</span>Sonrisa</button>
+                        <button class="pattern-btn" onclick="showPattern('sad')"><span class="icon">😢</span>Triste</button>
+                        <button class="pattern-btn" onclick="showPattern('yes')"><span class="icon">✓</span>Sí</button>
+                        <button class="pattern-btn" onclick="showPattern('no')"><span class="icon">✗</span>No</button>
+                        <button class="pattern-btn" onclick="showPattern('arrow')"><span class="icon">➡️</span>Flecha</button>
+                        <button class="pattern-btn" onclick="clearMatrix()"><span class="icon">🗑️</span>Limpiar</button>
+                        <button class="pattern-btn" onclick="animatePatterns()"><span class="icon">▶️</span>Animar</button>
+                    </div>
+                    <div class="sensor-panel">
+                        <h4 style="margin-bottom:10px">📡 Sensores</h4>
+                        <div class="sensor-item">
+                            <span>🌡️ Temperatura</span>
+                            <span class="sensor-value" id="tempValue">22°C</span>
+                            <input type="range" class="sensor-slider" min="0" max="40" value="22" oninput="updateSensor('temp',this.value)">
+                        </div>
+                        <div class="sensor-item">
+                            <span>💡 Luz</span>
+                            <span class="sensor-value" id="lightValue">128</span>
+                            <input type="range" class="sensor-slider" min="0" max="255" value="128" oninput="updateSensor('light',this.value)">
+                        </div>
+                        <div class="sensor-item">
+                            <span>🧭 Brújula</span>
+                            <span class="sensor-value" id="compassValue">0°</span>
+                            <input type="range" class="sensor-slider" min="0" max="359" value="0" oninput="updateSensor('compass',this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LED -->
+        <section id="led" class="screen">
+            <div class="app-header">
+                <button class="back-btn" onclick="showScreen('home')">←</button>
+                <h1 class="app-title">💡 CapiLED</h1>
+            </div>
+            <div class="two-column-reverse">
+                <div class="card">
+                    <div class="config-group">
+                        <label>🔢 Número de LEDs</label>
+                        <div class="size-control" style="justify-content:flex-start">
+                            <button class="size-btn" onclick="changeLedCount(-1)">−</button>
+                            <input type="number" id="ledCount" value="12" min="1" max="30" style="width:60px;text-align:center" onchange="updateLedStrip()">
+                            <button class="size-btn" onclick="changeLedCount(1)">+</button>
+                        </div>
+                    </div>
+                    <div class="config-group">
+                        <label>🎨 Color</label>
+                        <div class="color-presets">
+                            <div class="color-preset active" style="background:#ef4444" onclick="selectColor(this,'#ef4444')"></div>
+                            <div class="color-preset" style="background:#f97316" onclick="selectColor(this,'#f97316')"></div>
+                            <div class="color-preset" style="background:#eab308" onclick="selectColor(this,'#eab308')"></div>
+                            <div class="color-preset" style="background:#22c55e" onclick="selectColor(this,'#22c55e')"></div>
+                            <div class="color-preset" style="background:#06b6d4" onclick="selectColor(this,'#06b6d4')"></div>
+                            <div class="color-preset" style="background:#3b82f6" onclick="selectColor(this,'#3b82f6')"></div>
+                            <div class="color-preset" style="background:#8b5cf6" onclick="selectColor(this,'#8b5cf6')"></div>
+                            <div class="color-preset" style="background:#ec4899" onclick="selectColor(this,'#ec4899')"></div>
+                            <div class="color-preset" style="background:#fff;border:1px solid #ccc" onclick="selectColor(this,'#ffffff')"></div>
+                            <div class="color-preset" style="background:#000" onclick="selectColor(this,'#000000')"></div>
+                        </div>
+                    </div>
+                    <div class="config-group">
+                        <label>✨ Efectos</label>
+                        <div class="effect-grid">
+                            <button class="effect-btn" onclick="applyEffect('solid')"><span class="icon">⬜</span>Sólido</button>
+                            <button class="effect-btn" onclick="applyEffect('rainbow')"><span class="icon">🌈</span>Arcoíris</button>
+                            <button class="effect-btn" onclick="applyEffect('chase')"><span class="icon">🏃</span>Perseguir</button>
+                            <button class="effect-btn" onclick="applyEffect('blink')"><span class="icon">💫</span>Parpadeo</button>
+                            <button class="effect-btn" onclick="applyEffect('fade')"><span class="icon">🌅</span>Fundido</button>
+                            <button class="effect-btn" onclick="applyEffect('alternate')"><span class="icon">🔀</span>Alternar</button>
+                        </div>
+                    </div>
+                    <div class="speed-control">
+                        <label>⏱️ Velocidad: <span id="speedValue">500ms</span></label>
+                        <input type="range" min="100" max="1000" value="500" oninput="updateSpeed(this.value)">
+                    </div>
+                    <button class="action-btn secondary" style="width:100%;margin-top:15px" onclick="exportLedCode()">📋 Exportar código Arduino</button>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">💡 Vista previa</h3>
+                    <div class="led-strip" id="ledStrip"></div>
+                    <p style="margin-top:12px;font-size:0.85rem;color:var(--text-light);text-align:center">Clic en cada LED para cambiar su color</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="capitulin" onclick="toggleTip()">🤖</div>
+    <div class="capitulin-tip" id="capitulinTip">¡Hola! Soy Capitulín. Elige un módulo para empezar. 🚀</div>
+
+    <script>
+        // Navigation
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if (id === 'beebot') initBeeBot();
+            if (id === 'lego') initLego();
+            if (id === 'tapetes') initTapetes();
+            if (id === 'circuitos') initCircuitos();
+            if (id === 'microbit') initMicrobit();
+            if (id === 'led') initLED();
+        }
+
+        // ===== BEEBOT =====
+        let bb = { size: 6, pos: {x:0,y:5}, program: [], obstacles: [], targets: [], running: false };
+        const cmdIcons = { up:'⬆️', down:'⬇️', left:'⬅️', right:'➡️', pause:'⏸️' };
+
+        function initBeeBot() { renderBB(); }
+
+        function renderBB() {
+            const g = document.getElementById('beebotGrid');
+            g.style.gridTemplateColumns = `repeat(${bb.size}, 1fr)`;
+            g.innerHTML = '';
+            for (let y = 0; y < bb.size; y++) {
+                for (let x = 0; x < bb.size; x++) {
+                    const c = document.createElement('div');
+                    c.className = 'grid-cell';
+                    const isObs = bb.obstacles.some(o => o.x===x && o.y===y);
+                    const isTar = bb.targets.some(t => t.x===x && t.y===y);
+                    if (isObs) { c.classList.add('obstacle'); c.textContent = '🚧'; }
+                    if (isTar) { c.classList.add('target'); c.textContent = '🎯'; }
+                    if (bb.pos.x===x && bb.pos.y===y) c.innerHTML = '<span class="beebot-robot">🐝</span>';
+                    c.onclick = () => toggleBBCell(x, y);
+                    g.appendChild(c);
+                }
+            }
+            document.getElementById('sizeDisplay').textContent = `${bb.size}×${bb.size}`;
+        }
+
+        function toggleBBCell(x, y) {
+            if (bb.pos.x===x && bb.pos.y===y) return;
+            const oi = bb.obstacles.findIndex(o => o.x===x && o.y===y);
+            const ti = bb.targets.findIndex(t => t.x===x && t.y===y);
+            if (oi >= 0) { bb.obstacles.splice(oi, 1); bb.targets.push({x,y}); }
+            else if (ti >= 0) { bb.targets.splice(ti, 1); }
+            else { bb.obstacles.push({x,y}); }
+            renderBB();
+        }
+
+        function changeGridSize(d) {
+            bb.size = Math.max(4, Math.min(10, bb.size + d));
+            bb.pos = {x:0, y:bb.size-1};
+            bb.obstacles = []; bb.targets = [];
+            renderBB();
+        }
+
+        function addCommand(cmd) {
+            if (bb.running) return;
+            bb.program.push(cmd);
+            document.getElementById('programDisplay').innerHTML = bb.program.map(c => `<div class="program-step">${cmdIcons[c]}</div>`).join('');
+        }
+
+        function undoCommand() { bb.program.pop(); document.getElementById('programDisplay').innerHTML = bb.program.map(c => `<div class="program-step">${cmdIcons[c]}</div>`).join(''); }
+
+        function clearProgram() {
+            bb.program = [];
+            bb.pos = {x:0, y:bb.size-1};
+            document.getElementById('programDisplay').innerHTML = '';
+            renderBB();
+        }
+
+        async function runProgram() {
+            if (bb.running || !bb.program.length) return;
+            bb.running = true;
+            for (const cmd of bb.program) {
+                await new Promise(r => setTimeout(r, 500));
+                let {x, y} = bb.pos;
+                if (cmd==='up') y--; if (cmd==='down') y++; if (cmd==='left') x--; if (cmd==='right') x++;
+                if (cmd!=='pause' && x>=0 && x<bb.size && y>=0 && y<bb.size && !bb.obstacles.some(o=>o.x===x&&o.y===y)) bb.pos = {x,y};
+                renderBB();
+            }
+            bb.running = false;
+            if (bb.targets.some(t => t.x===bb.pos.x && t.y===bb.pos.y)) showTip('🎉 ¡Meta alcanzada!');
+        }
+
+        // ===== LEGO =====
+        const legoProjects = [
+            { id:1, name:'Coche básico', level:'facil', desc:'Tu primer coche con motor',
+              materials:[{name:'Ladrillos 2x4',qty:8,icon:'🧱'},{name:'Ruedas',qty:4,icon:'⚙️'},{name:'Motor',qty:1,icon:'⚡'}],
+              steps:['Conecta el hub','Monta la base','Añade ruedas','Conecta motor','Prueba'],
+              code:'motor.A.run(50)\nwait(2000)\nmotor.A.stop()' },
+            { id:2, name:'Robot sensor', level:'medio', desc:'Detecta obstáculos',
+              materials:[{name:'Hub SPIKE',qty:1,icon:'🖥️'},{name:'Motor grande',qty:2,icon:'⚡'},{name:'Sensor',qty:1,icon:'📡'}],
+              steps:['Construye base','Añade motores','Monta sensor','Conecta cables','Programa'],
+              code:'while true:\n  if distance>20:\n    motor.run(60)\n  else:\n    motor.stop()' }
+        ];
+        let currentProj = null;
+
+        function initLego() {
+            document.getElementById('projectList').innerHTML = legoProjects.map(p => `
+                <div class="project-item ${currentProj?.id===p.id?'active':''}" onclick="selectProject(${p.id})">
+                    <h4>${p.name}</h4><p>${p.desc}</p><span class="level ${p.level}">${p.level}</span>
+                </div>`).join('');
+        }
+
+        function selectProject(id) {
+            currentProj = legoProjects.find(p => p.id===id);
+            initLego();
+            document.getElementById('projectTitle').textContent = currentProj.name;
+            document.getElementById('materialsList').innerHTML = currentProj.materials.map(m => `<div class="list-item"><div class="list-icon">${m.icon}</div><div><strong>${m.name}</strong><br>×${m.qty}</div></div>`).join('');
+            document.getElementById('stepsList').innerHTML = currentProj.steps.map((s,i) => `<div class="list-item" onclick="this.classList.toggle('completed')"><div class="list-icon">${i+1}</div><div>${s}</div></div>`).join('');
+            document.getElementById('codeContent').textContent = currentProj.code;
+        }
+
+        function showTab(name) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(name+'Tab').classList.add('active');
+        }
+
+        // ===== TAPETES =====
+        let tap = { rows:6, cols:6, theme:'numeros', cells:[], selected:null };
+        const themes = {
+            numeros:['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'],
+            letras:['🅰️','🅱️','©️','🇩','🇪','🇫','🇬','🇭','🇮','🇯'],
+            animales:['🐶','🐱','🐰','🦊','🐻','🐼','🐨','🦁','🐯','🐮'],
+            frutas:['🍎','🍊','🍋','🍇','🍓','🍑','🍒','🥝','🍌','🍉'],
+            formas:['⭐','❤️','💎','🔶','🔷','⬛','🟢','🔺','⬜','🟣'],
+            vacio:['⬜']
+        };
+
+        function initTapetes() { generateTapete(); renderPalette(); }
+
+        function selectTheme(btn) {
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            tap.theme = btn.dataset.theme;
+            generateTapete(); renderPalette();
+        }
+
+        function renderPalette() {
+            const els = themes[tap.theme];
+            document.getElementById('elementPalette').innerHTML = els.map((e,i) => `<div class="palette-item ${i===0?'active':''}" onclick="selectEl(this,'${e}')">${e}</div>`).join('') + `<div class="palette-item" onclick="selectEl(this,'')">🗑️</div>`;
+            tap.selected = els[0];
+        }
+
+        function selectEl(el, v) {
+            document.querySelectorAll('.palette-item').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            tap.selected = v;
+        }
+
+        function generateTapete() {
+            tap.rows = +document.getElementById('tapeteRows').value;
+            tap.cols = +document.getElementById('tapeteCols').value;
+            const els = themes[tap.theme];
+            tap.cells = Array.from({length: tap.rows*tap.cols}, (_,i) => els[i % els.length]);
+            renderTapete();
+        }
+
+        function renderTapete() {
+            const g = document.getElementById('tapeteGrid');
+            g.style.gridTemplateColumns = `repeat(${tap.cols}, 1fr)`;
+            g.innerHTML = tap.cells.map((c,i) => `<div class="tapete-cell" onclick="tap.cells[${i}]=tap.selected;renderTapete()">${c}</div>`).join('');
+        }
+
+        function printTapete() { window.print(); }
+        function saveTapete() {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(tap)], {type:'application/json'}));
+            a.download = `tapete-${tap.rows}x${tap.cols}.json`;
+            a.click();
+            showTip('💾 Tapete guardado');
+        }
+
+        // ===== CIRCUITOS =====
+        let circ = { comp:'wire', grid:[] };
+        const compIcons = { wire:'〰️', battery:'🔋', led:'💡', switch:'🔘', resistor:'⚡', motor:'⚙️', buzzer:'🔔', eraser:'' };
+
+        function initCircuitos() {
+            circ.grid = new Array(80).fill(null);
+            renderCircuit();
+        }
+
+        function selectComponent(btn, c) {
+            document.querySelectorAll('.component-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            circ.comp = c;
+        }
+
+        function renderCircuit() {
+            document.getElementById('circuitGrid').innerHTML = circ.grid.map((c,i) => `
+                <div class="circuit-cell ${c==='wire'?'wire':c?'has-component':''}" onclick="placeComp(${i})">${c?compIcons[c]:''}</div>
+            `).join('');
+        }
+
+        function placeComp(i) {
+            circ.grid[i] = circ.comp==='eraser' ? null : circ.comp;
+            renderCircuit();
+        }
+
+        function testCircuit() {
+            const has = c => circ.grid.includes(c);
+            const st = document.getElementById('circuitStatus');
+            const msg = document.getElementById('circuitMessage');
+            if (has('battery') && has('led') && has('wire')) {
+                st.classList.add('on');
+                msg.textContent = '¡Circuito cerrado! ✓';
+                document.querySelectorAll('.circuit-cell').forEach(c => { if(c.textContent) c.classList.add('powered'); });
+                showTip('⚡ ¡Funciona!');
+            } else {
+                st.classList.remove('on');
+                msg.textContent = 'Circuito abierto';
+                document.querySelectorAll('.circuit-cell').forEach(c => c.classList.remove('powered'));
+                showTip('🔌 Conecta pila + cable + LED');
+            }
+        }
+
+        function clearCircuit() {
+            circ.grid = new Array(80).fill(null);
+            document.getElementById('circuitStatus').classList.remove('on');
+            document.getElementById('circuitMessage').textContent = 'Sin circuito';
+            renderCircuit();
+        }
+
+        // ===== MICROBIT =====
+        let mb = { leds: new Array(25).fill(false), animId: null };
+        const patterns = {
+            heart:[0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,1,0,0],
+            smile:[0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,0,1,1,1,0],
+            sad:[0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,1,1,0,1,0,0,0,1],
+            yes:[0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0],
+            no:[1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1],
+            arrow:[0,0,1,0,0,0,0,0,1,0,1,1,1,1,1,0,0,0,1,0,0,0,1,0,0]
+        };
+
+        function initMicrobit() { renderMB(); }
+
+        function renderMB() {
+            document.getElementById('microbitMatrix').innerHTML = mb.leds.map((on,i) => `<div class="led ${on?'on':''}" onclick="mb.leds[${i}]=!mb.leds[${i}];renderMB()"></div>`).join('');
+        }
+
+        function showPattern(name) {
+            mb.leds = patterns[name].map(v => v===1);
+            renderMB();
+        }
+
+        function clearMatrix() { mb.leds = new Array(25).fill(false); renderMB(); }
+
+        function mbPress(btn) {
+            if (btn==='A') showPattern('heart');
+            if (btn==='B') showPattern('smile');
+        }
+        function mbRelease() {}
+
+        function animatePatterns() {
+            if (mb.animId) return;
+            const names = Object.keys(patterns);
+            let i = 0;
+            mb.animId = setInterval(() => {
+                showPattern(names[i]);
+                i = (i+1) % names.length;
+            }, 700);
+        }
+
+        function updateSensor(type, val) {
+            if (type==='temp') document.getElementById('tempValue').textContent = val+'°C';
+            if (type==='light') document.getElementById('lightValue').textContent = val;
+            if (type==='compass') document.getElementById('compassValue').textContent = val+'°';
+        }
+
+        // ===== LED =====
+        let led = { count:12, colors:[], color:'#ef4444', speed:500, effectId:null };
+
+        function initLED() {
+            led.colors = new Array(led.count).fill('#ef4444');
+            renderLED();
+        }
+
+        function changeLedCount(d) {
+            led.count = Math.max(1, Math.min(30, led.count + d));
+            document.getElementById('ledCount').value = led.count;
+            updateLedStrip();
+        }
+
+        function updateLedStrip() {
+            led.count = +document.getElementById('ledCount').value || 12;
+            led.colors = new Array(led.count).fill(led.color);
+            renderLED();
+        }
+
+        function renderLED() {
+            document.getElementById('ledStrip').innerHTML = led.colors.map((c,i) => `<div class="led-pixel active" style="background:${c};color:${c}" onclick="led.colors[${i}]=led.color;renderLED()"></div>`).join('');
+        }
+
+        function selectColor(el, c) {
+            document.querySelectorAll('.color-preset').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            led.color = c;
+        }
+
+        function applyEffect(fx) {
+            clearInterval(led.effectId);
+            document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('active'));
+            event.target.closest('.effect-btn').classList.add('active');
+
+            if (fx==='solid') { led.colors = new Array(led.count).fill(led.color); renderLED(); }
+            else if (fx==='rainbow') {
+                const rb = ['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#3b82f6','#8b5cf6'];
+                led.colors = led.colors.map((_,i) => rb[i % rb.length]);
+                renderLED();
+            }
+            else if (fx==='chase') {
+                let p = 0;
+                led.effectId = setInterval(() => {
+                    led.colors = led.colors.map((_,i) => i===p ? led.color : '#334155');
+                    p = (p+1) % led.count;
+                    renderLED();
+                }, led.speed);
+            }
+            else if (fx==='blink') {
+                let on = true;
+                led.effectId = setInterval(() => {
+                    led.colors = new Array(led.count).fill(on ? led.color : '#334155');
+                    on = !on;
+                    renderLED();
+                }, led.speed);
+            }
+            else if (fx==='fade') {
+                const rb = ['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#3b82f6','#8b5cf6'];
+                let ci = 0;
+                led.effectId = setInterval(() => {
+                    led.colors = new Array(led.count).fill(rb[ci]);
+                    ci = (ci+1) % rb.length;
+                    renderLED();
+                }, led.speed);
+            }
+            else if (fx==='alternate') {
+                let flip = false;
+                led.effectId = setInterval(() => {
+                    led.colors = led.colors.map((_,i) => (i%2===(flip?0:1)) ? led.color : '#334155');
+                    flip = !flip;
+                    renderLED();
+                }, led.speed);
+            }
+        }
+
+        function updateSpeed(v) {
+            led.speed = +v;
+            document.getElementById('speedValue').textContent = v+'ms';
+        }
+
+        function exportLedCode() {
+            const code = `#include <Adafruit_NeoPixel.h>
+#define PIN 6
+#define NUM ${led.count}
+Adafruit_NeoPixel strip(NUM, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() { strip.begin(); }
+
+void loop() {
+${led.colors.map((c,i) => {
+    const r = parseInt(c.slice(1,3),16), g = parseInt(c.slice(3,5),16), b = parseInt(c.slice(5,7),16);
+    return `  strip.setPixelColor(${i}, strip.Color(${r},${g},${b}));`;
+}).join('\n')}
+  strip.show();
+  delay(${led.speed});
+}`;
+            navigator.clipboard.writeText(code);
+            showTip('📋 Código copiado');
+        }
+
+        // Helper
+        function toggleTip() { document.getElementById('capitulinTip').classList.toggle('active'); }
+        function showTip(msg) {
+            const tip = document.getElementById('capitulinTip');
+            tip.textContent = msg;
+            tip.classList.add('active');
+            setTimeout(() => tip.classList.remove('active'), 3500);
+        }
+
+        // PWA
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => showTip('¡Bienvenido a CapiRobots! 🤖'), 1000);
+        });
+    </script>
+</body>
+</html>
