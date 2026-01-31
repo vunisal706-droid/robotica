@@ -95,6 +95,13 @@
             "description": "Tutoriales de diseño 3D",
             "url": "index.html#tinkercad",
             "icons": [{ "src": "icons/tinkercad.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "CapiLaberinto",
+            "short_name": "Laberinto",
+            "description": "Juego de laberinto robótico",
+            "url": "https://vunisal706-droid.github.io/laberintorob/",
+            "icons": [{ "src": "icons/laberinto.png", "sizes": "192x192" }]
         }
     ]
 }
